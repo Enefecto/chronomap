@@ -9,5 +9,19 @@ const username = import.meta.env.VITE_GEONAME_USERNAME;
   <h1 class="text-4xl text-center border-b-2 border-red-600 pb-1 mb-5">
     Chrono Map de Chile
   </h1>
-  <Map client:only="react" apiUsername={username} />
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+    <div class="md:col-span-2">
+      <Map client:only="react" apiUsername={username} />
+    </div>
+
+    <div class="md:col-span-1 bg-slate-700 p-4">
+      <h2 class="text-xl font-bold mb-4">Sidebar</h2>
+      <p>
+        Lorem ipsum dolor sit, amet consectetur adipisicing elit. Repellat,
+        praesentium culpa inventore in officia repudiandae vero debitis eaque
+        ipsa consequatur harum doloremque voluptatum delectus iste, laborum
+        dicta maxime totam ullam.
+      </p>
+    </div>
+  </div>
 </MainLayout>

@@ -2,9 +2,9 @@ import { useEffect, useState } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
-
-const MapComponent = ({apiUsername}) => {
+const MapComponent = ({ apiUsername }) => {
   const [cities, setCities] = useState([]);
+
   useEffect(() => {
     const fetchCities = async () => {
       const response = await fetch(
@@ -15,7 +15,7 @@ const MapComponent = ({apiUsername}) => {
     };
 
     fetchCities();
-  }, []);
+  }, [apiUsername]);
 
   return (
     <MapContainer center={[-33.4489, -70.6693]} zoom={5} className="w-full h-[500px]">
