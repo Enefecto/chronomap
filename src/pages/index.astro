@@ -1,11 +1,13 @@
 ---
 import MainLayout from "@/layouts/MainLayout.astro";
 import Map from "@/components/Map.jsx";
+
+const username = import.meta.env.VITE_GEONAME_USERNAME;
 ---
 
 <MainLayout>
   <h1 class="text-4xl text-center border-b-2 border-red-600 pb-1 mb-5">
     Chrono Map de Chile
   </h1>
-  <Map client:only="react" />
+  <Map client:only="react" apiUsername={username} />
 </MainLayout>
