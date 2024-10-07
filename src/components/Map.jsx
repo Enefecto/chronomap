@@ -1,9 +1,12 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
 const MapComponent = ({ apiUsername }) => {
   const [cities, setCities] = useState([]);
+
+  // Referencia para el mapa
+  const mapRef = useRef(null);
 
   useEffect(() => {
     const fetchCities = async () => {
@@ -17,20 +20,54 @@ const MapComponent = ({ apiUsername }) => {
     fetchCities();
   }, [apiUsername]);
 
+  // Función para mover el mapa a las coordenadas de una ciudad
+  const flyToCity = (lat, lng) => {
+    const map = mapRef.current;
+    if (map) {
+      map.flyTo([lat, lng], 10); // '10' es el nivel de zoom
+    }
+  };
+
   return (
-    <MapContainer center={[-33.4489, -70.6693]} zoom={5} className="w-full h-[500px]">
-      <TileLayer
-        url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-        attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-      />
-      {cities.map((city, index) => (
-        <Marker key={index} position={[city.lat, city.lng]}>
-          <Popup>
-            {city.name}
-          </Popup>
-        </Marker>
-      ))}
-    </MapContainer>
+    <div className="grid grid-rows-2 md:grid-rows-1 md:grid-cols-4 h-screen w-full">
+      {/* Mapa */}
+      <div className="md:col-span-3 row-span-1 md:row-span-2 order-1 md:order-none">
+        <MapContainer
+          center={[-33.4489, -70.6693]} // Centrado en Santiago de Chile
+          zoom={5}
+          className="w-full h-full md:h-screen" // Asegura la altura en pantallas grandes y pequeñas
+          ref={mapRef}
+        >
+          <TileLayer
+            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+          />
+          {cities.map((city, index) => (
+            <Marker key={index} position={[city.lat, city.lng]}>
+              <Popup>{city.name}</Popup>
+            </Marker>
+          ))}
+        </MapContainer>
+      </div>
+
+      {/* Sidebar con la lista de ciudades */}
+      <div className="md:col-span-1 bg-slate-700 text-white p-4 overflow-y-auto order-2 md:order-none">
+        <h1 className="text-4xl text-center border-b-2 border-red-600 pb-1 mb-5">
+          Chrono Map de Chile
+        </h1>
+        <ul>
+          {cities.map((city, index) => (
+            <li
+              key={index}
+              className="cursor-pointer hover:text-yellow-300 my-2"
+              onClick={() => flyToCity(city.lat, city.lng)}
+            >
+              {city.name}
+            </li>
+          ))}
+        </ul>
+      </div>
+    </div>
   );
 };
 
