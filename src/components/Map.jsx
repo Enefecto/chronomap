@@ -4,7 +4,7 @@ import 'leaflet/dist/leaflet.css';
 
 const MapComponent = ({ apiUsername }) => {
   const [cities, setCities] = useState([]);
-  const [searchTerm, setSearchTerm] = useState(''); // Estado para el buscador
+  const [searchTerm, setSearchTerm] = useState('');
 
   // Referencia para el mapa
   const mapRef = useRef(null);
@@ -29,7 +29,7 @@ const MapComponent = ({ apiUsername }) => {
     }
   };
 
-  // Filtrar ciudades en función del texto del buscador
+  // Filtro de ciudades para el buscador
   const filteredCities = cities.filter(city =>
     city.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -49,8 +49,24 @@ const MapComponent = ({ apiUsername }) => {
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
           {filteredCities.map((city, index) => (
-            <Marker key={index} position={[city.lat, city.lng]}>
-              <Popup>{city.name}</Popup>
+            <Marker
+              key={index}
+              position={[city.lat, city.lng]}
+              eventHandlers={{
+                click: () => flyToCity(city.lat, city.lng), // Volamos a la ciudad cuando se hace clic en el marcador
+              }}
+            >
+              <Popup>
+                <div>
+                  <p>{city.name}</p>
+                  <button
+                    className="mt-2 bg-blue-500 text-white p-1 rounded hover:bg-blue-700"
+                    onClick={() => window.location.href = `/history/${city.name}`}
+                  >
+                    Leer Historia
+                  </button>
+                </div>
+              </Popup>
             </Marker>
           ))}
         </MapContainer>
@@ -61,17 +77,14 @@ const MapComponent = ({ apiUsername }) => {
         <h1 className="text-4xl text-center border-b-2 border-red-600 pb-1 mb-5">
           Chrono Map de Chile
         </h1>
-
-        {/* Buscador */}
+        {/* Input para el buscador */}
         <input
           type="text"
           placeholder="Buscar ciudad..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full p-2 mb-4 text-black"
+          className="w-full p-2 mb-4 rounded"
         />
-
-        {/* Lista de ciudades filtradas */}
         <ul>
           {filteredCities.map((city, index) => (
             <li

@@ -1,0 +1,88 @@
+---
+import MainLayout from "@/layouts/MainLayout.astro";
+import type { GetStaticPaths } from "astro";
+export const prerender = true;
+import fs from "fs"; // Para leer el archivo JSON
+import path from "path"; // Para manejar las rutas de archivos
+
+interface HistoriaEntry {
+  Historia: string;
+}
+interface City {
+  name: string;
+}
+
+export const getStaticPaths = (async () => {
+  // Cargar el archivo historia.json
+  const historiaPath = path.resolve("./history.json");
+  const historiaData = JSON.parse(fs.readFileSync(historiaPath, "utf-8"));
+
+  // Obtener las ciudades del archivo historia.json
+  const ciudadesDisponibles = Object.keys(historiaData);
+
+  // Consultar la API de GeoNames
+  const username = import.meta.env.VITE_GEONAME_USERNAME;
+  const results = await fetch(
+    `http://api.geonames.org/searchJSON?country=CL&featureClass=P&maxRows=50&orderby=population&username=${username}`
+  );
+  const { geonames } = await results.json();
+
+  // Filtrar las ciudades que están en historia.json
+  const filteredCities = geonames.filter((city: City) =>
+    ciudadesDisponibles.includes(city.name)
+  );
+
+  return filteredCities.map((city: City) => ({
+    params: {
+      ciudad: city.name,
+    },
+    props: {
+      historia: historiaData[city.name],
+    },
+    fallback: false,
+  }));
+}) satisfies GetStaticPaths;
+
+const { ciudad } = Astro.params;
+const { historia } = Astro.props as Record<string, HistoriaEntry>;
+---
+
+<MainLayout>
+  <h1 class="text-4xl mt-5 text-blue-800 font-bold">{ciudad}</h1>
+
+  <ul class="timeline mt-5 space-y-4">
+    {
+      Object.entries(historia).map(([year, entry]) => (
+        <li class="flex items-center space-x-4">
+          <span class="text-lg font-bold text-emerald-400">{year}</span>
+          <span class="text-white">{entry.Historia}</span>
+        </li>
+      ))
+    }
+  </ul>
+</MainLayout>
+
+<style>
+  .timeline {
+    list-style: none;
+    padding: 0;
+  }
+
+  .timeline li {
+    display: flex;
+    align-items: center;
+    border-left: 2px solid #3182ce;
+    padding-left: 1rem;
+    position: relative;
+  }
+
+  .timeline li::before {
+    content: "";
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background-color: #3182ce;
+    position: absolute;
+    left: -6px;
+  }
+</style>
