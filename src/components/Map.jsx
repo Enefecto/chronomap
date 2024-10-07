@@ -4,6 +4,7 @@ import 'leaflet/dist/leaflet.css';
 
 const MapComponent = ({ apiUsername }) => {
   const [cities, setCities] = useState([]);
+  const [searchTerm, setSearchTerm] = useState(''); // Estado para el buscador
 
   // Referencia para el mapa
   const mapRef = useRef(null);
@@ -28,6 +29,11 @@ const MapComponent = ({ apiUsername }) => {
     }
   };
 
+  // Filtrar ciudades en función del texto del buscador
+  const filteredCities = cities.filter(city =>
+    city.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   return (
     <div className="grid grid-rows-2 md:grid-rows-1 md:grid-cols-4 h-screen w-full">
       {/* Mapa */}
@@ -42,7 +48,7 @@ const MapComponent = ({ apiUsername }) => {
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
-          {cities.map((city, index) => (
+          {filteredCities.map((city, index) => (
             <Marker key={index} position={[city.lat, city.lng]}>
               <Popup>{city.name}</Popup>
             </Marker>
@@ -55,8 +61,19 @@ const MapComponent = ({ apiUsername }) => {
         <h1 className="text-4xl text-center border-b-2 border-red-600 pb-1 mb-5">
           Chrono Map de Chile
         </h1>
+
+        {/* Buscador */}
+        <input
+          type="text"
+          placeholder="Buscar ciudad..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="w-full p-2 mb-4 text-black"
+        />
+
+        {/* Lista de ciudades filtradas */}
         <ul>
-          {cities.map((city, index) => (
+          {filteredCities.map((city, index) => (
             <li
               key={index}
               className="cursor-pointer hover:text-yellow-300 my-2"
