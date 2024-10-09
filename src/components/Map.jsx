@@ -75,7 +75,7 @@ const MapComponent = ({ apiUsername }) => {
       {/* Sidebar con la lista de ciudades */}
       <div className="md:col-span-1 bg-slate-700 text-white p-4 overflow-y-auto order-2 md:order-none">
         <h1 className="text-4xl text-center border-b-2 border-red-600 pb-1 mb-5">
-          Chrono Map de Chile
+          Chrono Mapa de Chile
         </h1>
         {/* Input para el buscador */}
         <input
@@ -83,7 +83,7 @@ const MapComponent = ({ apiUsername }) => {
           placeholder="Buscar ciudad..."
           value={searchTerm}
           onChange={(e) => setSearchTerm(e.target.value)}
-          className="w-full p-2 mb-4 rounded"
+          className="w-full p-2 mb-4 rounded text-black"
         />
         <ul>
           {filteredCities.map((city, index) => (
