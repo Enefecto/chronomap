@@ -161,9 +161,8 @@ export const getStaticPaths = (async () => {
   console.log(ciudadesDisponibles);
 
   // Consultar la API de GeoNames
-  const username = import.meta.env.VITE_GEONAME_USERNAME;
   const results = await fetch(
-    `http://api.geonames.org/searchJSON?country=CL&featureClass=P&maxRows=50&orderby=population&username=${username}`
+    `https://geonames-proxy.destyght-dev.workers.dev/searchJSON?country=CL&featureClass=P&maxRows=50&orderby=population`
   );
   const { geonames } = await results.json();
 

@@ -2,24 +2,27 @@ import { useEffect, useState, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 
-const MapComponent = ({ apiUsername }) => {
+const MapComponent = () => {
   const [cities, setCities] = useState([]);
   const [searchTerm, setSearchTerm] = useState('');
 
   // Referencia para el mapa
   const mapRef = useRef(null);
 
-  useEffect(() => {
-    const fetchCities = async () => {
-      const response = await fetch(
-        `http://api.geonames.org/searchJSON?country=CL&featureClass=P&maxRows=50&orderby=population&username=${apiUsername}`
-      );
-      const data = await response.json();
-      setCities(data.geonames);
-    };
+useEffect(() => {
+  const fetchCities = async () => {
+    const response = await fetch(
+      'https://geonames-proxy.destyght-dev.workers.dev/searchJSON?country=CL&featureClass=P&maxRows=50&orderby=population'
+    );
+    const data = await response.json();
+    setCities(data.geonames);
 
-    fetchCities();
-  }, [apiUsername]);
+    console.log(data.geonames);
+  };
+
+  fetchCities();
+}, []);
+
 
   // Función para mover el mapa a las coordenadas de una ciudad
   const flyToCity = (lat, lng) => {
