@@ -1,6 +1,11 @@
 import { useEffect, useState, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
+import L from 'leaflet';
+
+// Importar y activar el paquete de compatibilidad para los íconos
+import 'leaflet-defaulticon-compatibility';
+import 'leaflet-defaulticon-compatibility/dist/leaflet-defaulticon-compatibility.css';
 
 const MapComponent = () => {
   const [cities, setCities] = useState([]);
@@ -9,20 +14,20 @@ const MapComponent = () => {
   // Referencia para el mapa
   const mapRef = useRef(null);
 
-useEffect(() => {
-  const fetchCities = async () => {
-    const response = await fetch(
-      'https://geonames-proxy.destyght-dev.workers.dev/searchJSON?country=CL&featureClass=P&maxRows=50&orderby=population'
-    );
-    const data = await response.json();
-    setCities(data.geonames);
+  // Obtener los datos de las ciudades de la API
+  useEffect(() => {
+    const fetchCities = async () => {
+      const response = await fetch(
+        'https://geonames-proxy.destyght-dev.workers.dev/searchJSON?country=CL&featureClass=P&maxRows=50&orderby=population'
+      );
+      const data = await response.json();
+      setCities(data.geonames);
 
-    console.log(data.geonames);
-  };
+      console.log(data.geonames);
+    };
 
-  fetchCities();
-}, []);
-
+    fetchCities();
+  }, []);
 
   // Función para mover el mapa a las coordenadas de una ciudad
   const flyToCity = (lat, lng) => {
