@@ -1,5 +1,6 @@
 ---
 import { siteConfig } from "@/siteConfig";
+import { ViewTransitions } from "astro:transitions";
 ---
 
 <html lang="en">
@@ -9,6 +10,7 @@ import { siteConfig } from "@/siteConfig";
     <meta name="viewport" content="width=device-width" />
     <meta name="generator" content={Astro.generator} />
     <title>{siteConfig.title}</title>
+    <ViewTransitions />
   </head>
   <body>
     <main
