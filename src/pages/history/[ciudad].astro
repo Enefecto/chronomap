@@ -1,6 +1,7 @@
 ---
 import MainLayout from "@/layouts/MainLayout.astro";
 import type { GetStaticPaths } from "astro";
+
 export const prerender = true;
 
 interface HistoriaEntry {
@@ -158,8 +159,6 @@ export const getStaticPaths = (async () => {
   // Obtener las ciudades del archivo historia.json
   const ciudadesDisponibles = Object.keys(historiaData);
 
-  console.log(ciudadesDisponibles);
-
   // Consultar la API de GeoNames
   const results = await fetch(
     `https://geonames-proxy.destyght-dev.workers.dev/searchJSON?country=CL&featureClass=P&maxRows=50&orderby=population`
@@ -184,6 +183,11 @@ export const getStaticPaths = (async () => {
 
 const { ciudad } = Astro.params;
 const { historia } = Astro.props as Record<string, HistoriaEntry>;
+
+// Redirigir a la página 404 si la historia no existe
+if (!historia) {
+  return Astro.redirect("/404");
+}
 ---
 
 <MainLayout>
