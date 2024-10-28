@@ -417,8 +417,7 @@ const cityData = {
       "Leyendas": "Se cuenta que el río Maule tiene secretos escondidos en sus aguas."
     }
   }
-}
-;
+};
 
 const MapComponent = () => {
   const [cities, setCities] = useState([]);
@@ -451,21 +450,21 @@ const MapComponent = () => {
     }
   };
 
-// Filtrar ciudades según el término de búsqueda y la categoría seleccionada
-const filteredCities = cities.filter(city => {
+  // Filtrar ciudades según el término de búsqueda y la categoría seleccionada
+  const filteredCities = cities.filter(city => {
 
-  const cityName = city.name;
+    const cityName = city.name;
 
-  // Verificar coincidencia de término de búsqueda en el nombre de la ciudad
-  const matchesSearchTerm = cityName.toLowerCase().includes(searchTerm.toLowerCase());
+    // Verificar coincidencia de término de búsqueda en el nombre de la ciudad
+    const matchesSearchTerm = cityName.toLowerCase().includes(searchTerm.toLowerCase());
 
-  // Verificar existencia de la categoría seleccionada en los datos de la ciudad
-  const hasCategory = selectedCategory === "Historia"
-    ? Object.values(cityData[cityName] || {}).some(yearData => yearData?.Historia)
-    : cityData[cityName]?.Relatos?.[selectedCategory];
+    // Verificar existencia de la categoría seleccionada en los datos de la ciudad
+    const hasCategory = selectedCategory === "Historia"
+      ? Object.values(cityData[cityName] || {}).some(yearData => yearData?.Historia)
+      : cityData[cityName]?.Relatos?.[selectedCategory];
 
-  return matchesSearchTerm && (selectedCategory ? hasCategory : true);
-});
+    return matchesSearchTerm && (selectedCategory ? hasCategory : true);
+  });
 
 
 
@@ -539,7 +538,7 @@ const filteredCities = cities.filter(city => {
               value={selectedCategory}
               onChange={(e) => setSelectedCategory(e.target.value)}
             >
-              <option value="">Selecciona una categoría</option>
+              <option value="" disabled>Selecciona una categoría</option>
               <option value="Historia">Historia</option>
               <option value="Mitos">Mitos</option>
               <option value="Leyendas">Leyendas</option>
@@ -548,7 +547,8 @@ const filteredCities = cities.filter(city => {
             </select>
 
             <ul>
-              {filteredCities.map((city, index) => (
+            {filteredCities.length > 0 ? (
+              filteredCities.map((city, index) => (
                 <li
                   key={index}
                   className="cursor-pointer hover:text-yellow-300 my-2"
@@ -556,7 +556,11 @@ const filteredCities = cities.filter(city => {
                 >
                   {city.name}
                 </li>
-              ))}
+              ))
+            ) : (
+              <li className='my-2'>Ninguna ciudad encontrada :(</li>
+            )}
+
             </ul>
           </>
         )}
