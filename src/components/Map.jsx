@@ -492,13 +492,14 @@ const MapComponent = () => {
             >
               <Popup>
                 <div>
-                  <p>{city.name}</p>
-                  <button
+                  <p className='text-blue-400 font-bold'>{city.name}</p>
+                  {selectedCategory === '' || selectedCategory === 'Historia' ? <button
                     className="mt-2 bg-blue-500 text-white p-1 rounded hover:bg-blue-700"
-                    onClick={() => window.location.href = `/history/${city.name}`}
+                    onClick={() => window.location.href = `/TimeLine/#${city.name}`}
                   >
                     Leer Historia
-                  </button>
+                  </button> : ''}
+                  
                   {selectedCategory !== '' && selectedCategory !== 'Historia' ? <p>{cityData[city.name]?.Relatos[selectedCategory]}</p> : ''}
                 </div>
               </Popup>
@@ -509,7 +510,7 @@ const MapComponent = () => {
 
       {/* Sidebar con la lista de ciudades */}
       <div className="md:col-span-1 bg-slate-700 text-white p-4 overflow-y-auto order-2 md:order-none">
-        <h1 className="text-4xl text-center border-b-2 border-red-600 pb-1 mb-5">
+        <h1 className="text-4xl text-center border-b-2 border-red-500 pb-1 mb-5">
           Chrono Mapa de Chile
         </h1>
 
