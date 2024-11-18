@@ -88,7 +88,7 @@ const data: DataStructure = {
         "La leyenda de la Virgen de San Bernardo, que protege a la ciudad.",
     },
   },
-  "Puerto Montt": {
+  "Port Montt": {
     "1853": {
       Historia: "Fundación de Puerto Montt como una colonia alemana.",
     },
@@ -571,4 +571,79 @@ const groupedStories: Record<number, Story[]> = orderedStories.reduce(
       ))
     }
   </div>
+  <script>
+    if (typeof window !== "undefined") {
+      // Función para prevenir el desplazamiento automático
+      const preventAutoScroll = (e: Event) => {
+        if ((e.target as HTMLElement).tagName === "HTML" && e.type === "load") {
+          const hash = window.location.hash.slice(1);
+          if (hash) {
+            e.preventDefault(); // Evitar desplazamiento automático del navegador
+          }
+        }
+      };
+
+      const handleHashChange = () => {
+        let hash = window.location.hash.slice(1); // Obtener el hash sin el '#'
+
+        if (hash) {
+          // Decodificar el hash para manejar caracteres especiales
+          hash = decodeURIComponent(hash); // Decodifica los caracteres especiales (como tildes y espacios)
+
+          // Restablecer estilos anteriores
+          document
+            .querySelectorAll(".highlight")
+            .forEach((el) => el.classList.remove("highlight"));
+
+          // Reemplazar %20 por espacios (si es que hay en el hash)
+          hash = hash.replace(/%20/g, " ");
+
+          // Buscar el elemento correspondiente al hash
+          const cityElement = document.getElementById(hash);
+
+          if (cityElement) {
+            // Destacar la ciudad
+            cityElement.classList.add("highlight");
+
+            // Desplazarse suavemente al elemento
+            cityElement.scrollIntoView({
+              behavior: "smooth", // Transición suave
+              block: "center", // Centrar el elemento verticalmente
+              inline: "nearest", // Ajuste horizontal (opcional)
+            });
+          }
+        }
+      };
+
+      // Prevenir el desplazamiento automático al cargar la página
+      window.addEventListener("load", preventAutoScroll);
+
+      // Manejar el hash al cargar la página
+      window.addEventListener("load", handleHashChange);
+
+      // Escuchar cambios en el hash
+      window.addEventListener("hashchange", handleHashChange);
+    }
+  </script>
+
+  <style>
+    /* Animación personalizada */
+    @keyframes highlightAnimation {
+      0% {
+        transform: scale(1); /* Tamaño original */
+      }
+      50% {
+        transform: scale(1.2); /* Tamaño agrandado */
+      }
+      100% {
+        transform: scale(1); /* Volver al tamaño original */
+      }
+    }
+
+    /* Estilo para destacar el elemento */
+    .highlight {
+      animation: highlightAnimation 1.5s ease 0.5s; /* Duración de 1s, con retraso de 1s */
+      animation-fill-mode: forwards; /* Mantiene el estado final después de la animación */
+    }
+  </style>
 </MainLayout>

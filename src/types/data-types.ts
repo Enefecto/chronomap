@@ -6,7 +6,7 @@ export interface DataStructure {
   Valparaíso: Valparaíso;
   Talcahuano: Lota;
   "San Bernardo": SANBernardo;
-  "Puerto Montt": PuertoMontt;
+  "Port Montt": PuertoMontt;
   Temuco: Temuco;
   Concepción: Concepción;
   Arica: Arica;
