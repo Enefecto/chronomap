@@ -2,6 +2,7 @@ import { useEffect, useState, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L from 'leaflet';
+import clsx from 'clsx';
 
 // Importar y activar el paquete de compatibilidad para los íconos
 import 'leaflet-defaulticon-compatibility';
@@ -424,6 +425,7 @@ const MapComponent = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedCategory, setSelectedCategory] = useState(''); // Nueva categoría
   const [loading, setLoading] = useState(true);
+  const [suscribed, setSuscribed] = useState(localStorage.getItem('isSubscribed') === 'true');
 
   // Referencia para el mapa
   const mapRef = useRef(null);
@@ -467,6 +469,28 @@ const MapComponent = () => {
   });
 
 
+
+  const toggleSubscription = () => {
+    const isSubscribed = localStorage.getItem('isSubscribed') === 'true';
+    
+    if (isSubscribed) {
+      localStorage.setItem('isSubscribed', 'false');
+      setSuscribed(false);
+    } else {
+      localStorage.setItem('isSubscribed', 'true');
+      setSuscribed(true);
+    }
+  };
+
+  //Clases
+
+  const buttonSuscribeClass = clsx(
+    'w-full mb-4 text-white font-semibold py-4 px-4 sm:px-8 rounded-xl focus:outline-none',
+    {
+      'bg-red-500 hover:bg-red-600': !suscribed,
+      'bg-gray-500 hover:bg-gray-600': suscribed,
+    }
+  );
 
   return (
     <div className="grid grid-rows-2 md:grid-rows-1 md:grid-cols-4 h-screen w-full">
@@ -513,7 +537,7 @@ const MapComponent = () => {
         <h1 className="text-4xl text-center border-b-2 border-red-500 pb-1 mb-5">
           Chrono Mapa de Chile
         </h1>
-
+        
         {/* Mostrar el indicador de carga si loading es true */}
         {loading ? (
           <div className="flex justify-center items-center h-full gap-2">
@@ -563,9 +587,14 @@ const MapComponent = () => {
             )}
 
             </ul>
+            
+            <button onClick={toggleSubscription} className={buttonSuscribeClass}>
+              {suscribed ? 'Suscrito' : 'Suscribirse'}
+            </button>
           </>
         )}
       </div>
+      
     </div>
   );
 };
